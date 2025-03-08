@@ -18,6 +18,22 @@ Nice to have things:
 The average current consumption with display turned off is ~200uA.
 A set of 3 AAA batteries should last more than a year.
 
+## Building
+
+At least 14.1.0 avr-gcc is required. Steps needed to build from source can be found in
+`.github/workflows/build.yml`. [u8g2](https://github.com/olikraus/u8g2) needs to be
+cloned into `external` subdirectory. Then the usual `CMake` routine can commence:
 
 
+```sh
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DAVR_MCU=attiny3226 \
+      -DAVR_PROGRAMMER=serialupdi -DAVR_PROGRAMMER_PORT=/dev/ttyUSB0 \
+      -DMCU_FREQ=10000000 -DCMAKE_TOOLCHAIN_FILE=../toolchain-avr-gcc.make ..
+make -j
+```
+
+Fairly recent [AVRDUDE](https://github.com/avrdudes/avrdude) is also needed in order to use
+UPDI flashing via a USB-to-serial converter.
 
