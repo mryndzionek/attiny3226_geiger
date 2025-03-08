@@ -1,0 +1,74 @@
+name: build
+
+on:
+  push:
+    branches:    
+      - build
+jobs:
+  build:
+
+    env:
+      BUILD_TYPE: Release
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Prepare
+      run: |
+        sudo apt update
+        sudo apt install avr-libc binutils-avr gcc-avr libgmp-dev libmpfr-dev libmpc-dev
+
+    - name: Checkout
+      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+
+    - name: Configure
+      run: |
+        mkdir dependencies
+        cd dependencies
+        wget https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-14.2.0/gcc-14.2.0.tar.xz
+        tar -xf gcc-14.2.0.tar.xz
+        mkdir objdir
+        cd objdir
+        $PWD/../gcc-14.2.0/configure --prefix=$PWD/../AVR-GCC-14.2.0 --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp
+        make -j8
+        make install
+        cd ..
+        wget https://ftp.gnu.org/gnu/binutils/binutils-2.44.tar.xz
+        tar -xf binutils-2.44.tar.xz
+        cd binutils-2.44
+        ./configure --prefix=$PWD/../AVR-GCC-14.2.0 --target=avr
+        make -j8
+        make install
+        cd ..
+        git clone git@github.com:avrdudes/avr-libc.git
+        cd avr-libc
+        git checkout avr-libc-2_2_1-release
+        export PATH=$PWD/../AVR-GCC-14.2.0/bin:$PATH
+        ./bootstrap
+        ./configure --prefix=$PWD/../AVR-GCC-14.2.0 --build=`./config.guess` --host=avr
+        make -j8
+        make install
+        sudo apt remove avr-libc binutils-avr gcc-avr
+      
+    - name: Build
+      run: |
+        mkdir external
+        cd external
+        git clone git@github.com:olikraus/u8g2.git
+        cd u8g2
+        git checkout 2b75f932b5ef4b4de8edf73e1a690702a35b1976
+        cd ../..
+        export PATH=dependencies/AVR-GCC-14.2.0/bin:$PATH
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DAVR_MCU=attiny3226 \
+              -DAVR_PROGRAMMER=serialupdi -DAVR_PROGRAMMER_PORT=/dev/ttyUSB0 \
+              -DMCU_FREQ=10000000 -DCMAKE_TOOLCHAIN_FILE=../toolchain-avr-gcc.make ..
+        make -j
+
+    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+      with:
+        name: binary
+        path: |
+          build/src/main.hex
