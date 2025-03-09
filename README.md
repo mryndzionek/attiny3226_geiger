@@ -13,15 +13,11 @@ Nice to have things:
 
 ![schematic](resources/schematic.png)
 
-## More info
-
-The average current consumption with display turned off is ~200uA.
-A set of 3 AAA batteries should last more than a year.
 
 ## Building
 
-At least 14.1.0 avr-gcc is required. Steps needed to build from source can be found in
-`.github/workflows/build.yml`. [u8g2](https://github.com/olikraus/u8g2) needs to be
+At least 14.1.0 `avr-gcc` is required. Steps needed to build from source can be found in
+[build.yml](.github/workflows/build.yml). [u8g2](https://github.com/olikraus/u8g2) needs to be
 cloned into `external` subdirectory. Then the usual `CMake` routine can commence:
 
 
@@ -36,4 +32,13 @@ make -j
 
 Fairly recent [AVRDUDE](https://github.com/avrdudes/avrdude) is also needed in order to use
 UPDI flashing via a USB-to-serial converter.
+
+## Menu structure
+
+![menu](resources/menu.png)
+
+## More info
+
+The average current consumption with display turned off is ~200uA.
+A set of 3 AAA batteries should last more than a year.
 

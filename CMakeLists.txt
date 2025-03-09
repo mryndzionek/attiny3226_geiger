@@ -4,7 +4,7 @@ project(attiny3226_geiger C ASM)
 execute_process(COMMAND git rev-parse --short HEAD OUTPUT_VARIABLE COMMIT_ID OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wstrict-prototypes")
-set(CMAKE_C_FLAGS_RELEASE "-Os")
+set(CMAKE_C_FLAGS_RELEASE "-g -Os")
 
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/include/config.h.in"
