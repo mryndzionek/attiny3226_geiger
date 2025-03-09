@@ -53,7 +53,6 @@
 #define BIG_LABEL_FONT (u8g2_font_profont15_tf)
 #define MEDIUM_LABEL_FONT (u8g2_font_5x7_mr)
 #define SMALL_LABEL_FONT (u8g2_font_5x7_mr)
-#define ICON_FONT_2 (u8g2_font_unifont_t_77)
 
 #define DIGITS_Y_POS (54)
 
@@ -115,6 +114,13 @@ typedef struct {
 // Alkaline
 static const uint16_t battery_level_thresholds[BATTERY_LEVEL_NUM] = {116, 122,
                                                                      128, 136};
+
+#define warning_width (13)
+#define warning_height (14)
+static const unsigned char warning_bits[] = {
+    0x40, 0x00, 0xa0, 0x00, 0xa0, 0x00, 0x10, 0x01, 0x10, 0x01,
+    0x48, 0x02, 0x48, 0x02, 0x44, 0x04, 0x44, 0x04, 0x42, 0x08,
+    0x02, 0x08, 0x41, 0x10, 0x01, 0x10, 0xff, 0x1f};
 
 const uint8_t icons_font[249] U8G2_FONT_SECTION("icons_font") =
     "\7\0\4\3\5\5\3\5\6\25\24\0\4\22\0\22\0\0\0\0\0\0\334\60\24\20Y\313q`\22\35"
@@ -1129,12 +1135,10 @@ static void update_display(display_ctx_t *ctx) {
     if (!((ctx->state == display_state_info) ||
           (ctx->state == display_rate_analog))) {
       if (ctx->alarm_level > alarm_level_green) {
-        u8g2_SetFont(&u8g2, ICON_FONT_2);
-        u8g2_DrawGlyph(&u8g2, 5, 15, 0x26a0);
+        u8g2_DrawXBM(&u8g2, 5, 0, warning_width, warning_height, warning_bits);
       }
       if (ctx->alarm_level > alarm_level_orange) {
-        u8g2_SetFont(&u8g2, ICON_FONT_2);
-        u8g2_DrawGlyph(&u8g2, 22, 15, 0x26a0);
+        u8g2_DrawXBM(&u8g2, 22, 0, warning_width, warning_height, warning_bits);
       }
     }
 
