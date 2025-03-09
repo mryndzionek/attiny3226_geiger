@@ -41,7 +41,7 @@ jobs:
         make -j8
         make install
         cd ..
-        git clone git@github.com:avrdudes/avr-libc.git
+        git clone https://github.com/avrdudes/avr-libc.git
         cd avr-libc
         git checkout avr-libc-2_2_1-release
         export PATH=$PWD/../AVR-GCC-14.2.0/bin:$PATH
@@ -55,20 +55,24 @@ jobs:
       run: |
         mkdir external
         cd external
-        git clone git@github.com:olikraus/u8g2.git
+        git clone https://github.com/olikraus/u8g2.git
         cd u8g2
         git checkout 2b75f932b5ef4b4de8edf73e1a690702a35b1976
         cd ../..
-        export PATH=dependencies/AVR-GCC-14.2.0/bin:$PATH
+        export PATH=$PWD/dependencies/AVR-GCC-14.2.0/bin:$PATH
+        echo $PATH
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DAVR_MCU=attiny3226 \
               -DAVR_PROGRAMMER=serialupdi -DAVR_PROGRAMMER_PORT=/dev/ttyUSB0 \
               -DMCU_FREQ=10000000 -DCMAKE_TOOLCHAIN_FILE=../toolchain-avr-gcc.make ..
         make -j
+        echo "version_sha=$(cat include/config.h | tr -d '\n' | cut -f3 -d' ' | tr -d '\"')" >> "$GITHUB_ENV"
 
     - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
       with:
-        name: binary
+        name: binary-${{ env.version_sha }}
         path: |
           build/src/main.hex
+          build/src/main.elf
+
