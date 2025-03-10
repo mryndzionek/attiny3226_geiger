@@ -1,4 +1,6 @@
-# ATtiny low power Geiger counter
+[![build](https://github.com/mryndzionek/attiny3226_geiger/actions/workflows/build.yml/badge.svg)](https://github.com/mryndzionek/attiny3226_geiger/actions/workflows/build.yml)
+
+![header](resources/header.png)
 
 The goal of this project is to design a Geiger counter and
 continuous radiation monitor in one device. This means two things:
