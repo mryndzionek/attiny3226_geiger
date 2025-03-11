@@ -63,6 +63,9 @@
 #define EV_BUTTON_SHORT_PRESS _BV(1)
 #define EV_BUTTON_LONG_PRESS _BV(2)
 
+#define g_events (GPIOR0)
+#define events (GPIOR1)
+
 typedef struct {
   bool state;
   uint8_t pulse_timer;
@@ -484,7 +487,6 @@ static char const *const tick_labels[6] = {
 };
 
 static u8g2_t u8g2;
-static volatile uint_fast8_t g_events;
 static volatile uint_fast16_t g_pulse_count;
 static volatile uint_fast8_t g_is_power_save;
 static volatile uint_fast8_t g_alarm_level;
@@ -1238,7 +1240,6 @@ int main(void) {
   u8g2_SetPowerSave(&u8g2, 1);
 
   set_sleep_mode(SLEEP_MODE_STANDBY);
-  uint8_t events = 0;
 
   configure_watchdog();
 
