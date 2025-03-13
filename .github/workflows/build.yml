@@ -76,3 +76,9 @@ jobs:
           build/src/main.hex
           build/src/main.elf
 
+    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+      with:
+        name: toolchain-${{ env.version_sha }}
+        path: |
+          dependencies/AVR-GCC-14.2.0
+
