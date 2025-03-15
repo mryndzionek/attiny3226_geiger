@@ -22,7 +22,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
 
-    - name: Configure
+    - name: Cache
+      id: cache-target
+      uses: actions/cache@v4
+      with:
+        path: dependencies/AVR-GCC-14.2.0
+        key: ${{ runner.os }}-avr-gcc-14-2-0
+
+    - if: ${{ steps.cache-target.outputs.cache-hit != 'true' }}
+      name: Configure
       run: |
         mkdir dependencies
         cd dependencies
