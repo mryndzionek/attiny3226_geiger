@@ -1124,7 +1124,7 @@ static void update_display(display_ctx_t *ctx) {
       u8g2_DrawStr(&u8g2, 3, 30, tmp);
 
       snprintf(tmp, sizeof(tmp), "Temperature: %d.%dC", ctx->temp / 10,
-               ctx->temp % 10);
+               abs(ctx->temp) % 10);
       u8g2_DrawStr(&u8g2, 3, 40, tmp);
 
       snprintf(tmp, sizeof(tmp), "Resets: %d", ctx->reset_counter);
